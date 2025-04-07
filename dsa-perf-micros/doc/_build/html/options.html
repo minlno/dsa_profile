@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Command Line Options &#8212; Intel® DSA Performance Micros 22.04 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sample Command Lines" href="sample_command_lines.html" />
+    <link rel="prev" title="DSA Configuration" href="dsa_configuration.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="command-line-options">
+<h1>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h1>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-b">
+<span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;batch</span> <span class="pre">size&gt;</span></span><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use batch descriptors with “batch size” descriptors in a batch.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-B">
+<span class="sig-name descname"><span class="pre">-B</span></span><span class="sig-prename descclassname"> <span class="pre">PCI</span> <span class="pre">device/resource+offset_into_mmio</span> <span class="pre">to</span> <span class="pre">map</span> <span class="pre">memory</span> <span class="pre">from</span></span><a class="headerlink" href="#cmdoption-B" title="Permalink to this definition">¶</a></dt>
+<dd><p>(e.g., m,Bus:Device.Function/resource0+4096 =&gt; memory is src, B:D.F/resource0+4096 is dst)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-c">
+<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment portal address between descriptors.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-D">
+<span id="cmdoption-d"></span><span class="sig-name descname"><span class="pre">-D</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;delta</span> <span class="pre">percentage&gt;</span></span><a class="headerlink" href="#cmdoption-D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delta (specified as a percentage) between buffers for delta create and delta apply</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-e">
+<span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;block</span> <span class="pre">length&gt;</span></span><a class="headerlink" href="#cmdoption-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block length [0-3] for dif operations</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-f">
+<span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the cache control flag in descriptors.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-F">
+<span class="sig-name descname"><span class="pre">-F</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;flag_bits_to_clear:flag_bits_to_set:every_nth_desc&gt;</span></span><a class="headerlink" href="#cmdoption-F" title="Permalink to this definition">¶</a></dt>
+<dd><p>(e.g. -F 0xFFFFF7:0x8:4 to clear Addr2_TC flag and set RCR=1 on every 4th descriptor)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-h">
+<span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show help.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-i">
+<span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;iteration</span> <span class="pre">count&gt;</span></span><a class="headerlink" href="#cmdoption-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of iterations to run the test for</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-j">
+<span class="sig-name descname"><span class="pre">-j</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-j" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously stream descriptors to the device (use for bandwidth measurment)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-k">
+<span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;CPU</span> <span class="pre">list&gt;</span></span><a class="headerlink" href="#cmdoption-k" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of CPUs (e.g., -k0, -k0,1,2,3, -k0-2, -k0-2,3)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-K">
+<span class="sig-name descname"><span class="pre">-K</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;CPU/WQ</span> <span class="pre">list&gt;</span></span><a class="headerlink" href="#cmdoption-K" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of CPUs and associated WQ (e.g., [0,1]&#64;dsa0,0,[2-3]&#64;dsa0,1)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-l">
+<span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;0/1&gt;</span></span><a class="headerlink" href="#cmdoption-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use large pages, 0 for 2M, 1 for 1G.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-m">
+<span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use CPU to implement opcodes.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-n">
+<span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;buffer</span> <span class="pre">count&gt;</span></span><a class="headerlink" href="#cmdoption-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buffer count</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-o">
+<span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;opcode&gt;</span></span><a class="headerlink" href="#cmdoption-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>DSA opcode</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-P">
+<span id="cmdoption-p"></span><span class="sig-name descname"><span class="pre">-P</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-P" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use processes instead of threads.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-q">
+<span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;queue</span> <span class="pre">depth&gt;</span></span><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queue depth for dedicated WQ, can be &gt; WQ size (use with -j)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-s">
+<span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;size&gt;</span></span><a class="headerlink" href="#cmdoption-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer size in bytes, can use k,m,g to specify KiB/MiB/GiB (e.g., -b 200m)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-S">
+<span class="sig-name descname"><span class="pre">-S</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;Numa</span> <span class="pre">Node</span> <span class="pre">ID</span> <span class="pre">list&gt;</span></span><a class="headerlink" href="#cmdoption-S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numa node ID list for b1, b2, b3 allocation, -1 is used for memory allocation
+from CPUs NUMA node (e.g., -k0,59 -S-1,1 -S-1,0 allocates memmove source from
+node 0 and destination from node 1 for CPU0, and allocates memmove source from
+node 1 and destination from node 1 for CPU59 if CPU59 were on NUMA node 1)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-t">
+<span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;stride&gt;</span></span><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stride between buffer start addresses</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-T">
+<span class="sig-name descname"><span class="pre">-T</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;time</span> <span class="pre">in</span> <span class="pre">seconds&gt;</span></span><a class="headerlink" href="#cmdoption-T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time interval for BW measurement (use with -i-1)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-u-engine">
+<span class="sig-name descname"><span class="pre">-u&lt;engine</span></span><span class="sig-prename descclassname"> <span class="pre">count&gt;</span></span><a class="headerlink" href="#cmdoption-u-engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use user mode driver (VFIO/UIO)</p>
+<p>Optional parameter specifies device engine count (defaults to max engines in device)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-w">
+<span class="sig-name descname"><span class="pre">-w</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;0/1&gt;</span></span><a class="headerlink" href="#cmdoption-w" title="Permalink to this definition">¶</a></dt>
+<dd><p>WQ type, 0 =&gt; dedicated WQ, 1 =&gt; shared WQ</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-W">
+<span class="sig-name descname"><span class="pre">-W</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;warmup</span> <span class="pre">interations&gt;</span></span><a class="headerlink" href="#cmdoption-W" title="Permalink to this definition">¶</a></dt>
+<dd><p>Device TLB/IOMMU TLB/cache warmup loop count (not included in measurements,
+Use for latency measurements</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-x">
+<span class="sig-name descname"><span class="pre">-x</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;Hexadecimal</span> <span class="pre">mask&gt;</span></span><a class="headerlink" href="#cmdoption-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>bit0      =&gt; init device TLB each iteration (use for latency measurments)</p>
+<p>bits[1:5] =&gt; movdir64/enqcmd submission rate test</p>
+<p>bit[7:8]  =&gt; pause(7)/umwait(8) in completion wait (use for latency measurement)</p>
+<p>Rest      =&gt; unused</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-v">
+<span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;0/1&gt;</span></span><a class="headerlink" href="#cmdoption-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify result (0 =&gt; disable, 1 =&gt; enable, default is enable)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-y">
+<span class="sig-name descname"><span class="pre">-y</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;CPU</span> <span class="pre">access</span> <span class="pre">specifier</span> <span class="pre">list&gt;</span></span><a class="headerlink" href="#cmdoption-y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comma seperated list used to specify how DSA operands (None/Read/Write) are
+accessed by the CPU before descriptors are issued.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-Y">
+<span class="sig-name descname"><span class="pre">-Y</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert last descriptor to drain descriptor.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-z">
+<span class="sig-name descname"><span class="pre">-z</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;Data</span> <span class="pre">Placement</span> <span class="pre">Specifier</span> <span class="pre">List&gt;</span></span><a class="headerlink" href="#cmdoption-z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comma separated list of directives for data placement for respective buffers.
+the specifiers are -P (fetch into the L1 cache), -D (demote to LLC),
+-F (flush to memory)</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Intel® DSA Performance Micros</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_configuration.html">System Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsa_configuration.html">DSA Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_command_lines.html">Sample Command Lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iommu_off.html">intel_iommu=off mode/VT-D disabled</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submitting_patches.html">Submitting Patches</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="dsa_configuration.html" title="previous chapter">DSA Configuration</a></li>
+      <li>Next: <a href="sample_command_lines.html" title="next chapter">Sample Command Lines</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Intel® Corporation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/options.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

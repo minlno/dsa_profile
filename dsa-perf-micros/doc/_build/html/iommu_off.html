@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>intel_iommu=off mode/VT-D disabled &#8212; Intel® DSA Performance Micros 22.04 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Submitting Patches" href="submitting_patches.html" />
+    <link rel="prev" title="Sample Command Lines" href="sample_command_lines.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="intel-iommu-off-mode-vt-d-disabled">
+<h1>intel_iommu=off mode/VT-D disabled<a class="headerlink" href="#intel-iommu-off-mode-vt-d-disabled" title="Permalink to this headline">¶</a></h1>
+<p>DSA Micros uses DPDK’s NUMA aware memory management when using physical addresses if either intel_iommu=off is
+specified on the kernel command line mode or VT-D is disabled in the BIOS.</p>
+<p>Install dpdk libraries for your OS.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dnf install dpdk
+</pre></div>
+</div>
+<p>OR</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>apt install dpdk
+</pre></div>
+</div>
+<p>DSA Micros tries to locate for the DPDK EAL library (librte_eal.so) in a couple of standard directories,
+in case it errors out, supply the complete file path on your system in the DSA_PERF_MICROS_EAL_PATH env.
+variable.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span> <span class="nv">DSA_PERF_MICROS_EAL_PATH</span><span class="o">=</span>/usr/lib64/librte_eal.so.21
+</pre></div>
+</div>
+<p>Bind device to uio_pci_generic</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts./pci_bind.sh uio_pci_generic b:d.f
+</pre></div>
+</div>
+<p>Provide the -u command line argument</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -u -n128 -s4k -j -c -f -i1000
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Intel® DSA Performance Micros</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_configuration.html">System Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsa_configuration.html">DSA Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_command_lines.html">Sample Command Lines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">intel_iommu=off mode/VT-D disabled</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submitting_patches.html">Submitting Patches</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="sample_command_lines.html" title="previous chapter">Sample Command Lines</a></li>
+      <li>Next: <a href="submitting_patches.html" title="next chapter">Submitting Patches</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Intel® Corporation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/iommu_off.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

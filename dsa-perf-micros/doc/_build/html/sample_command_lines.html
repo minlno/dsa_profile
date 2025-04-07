@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Sample Command Lines &#8212; Intel® DSA Performance Micros 22.04 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="intel_iommu=off mode/VT-D disabled" href="iommu_off.html" />
+    <link rel="prev" title="Command Line Options" href="options.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="sample-command-lines">
+<h1>Sample Command Lines<a class="headerlink" href="#sample-command-lines" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p>Dedicated WQ configuration</p>
+<p>Dedicated WQ of max size (128) with 4 engines</p>
+</li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/setup_dsa.sh -d dsa0 -w <span class="m">1</span> -m d -e <span class="m">4</span>
+</pre></div>
+</div>
+<ul>
+<li><p>Shared WQ configuration</p>
+<p>Shared WQ of max size (128) with 4 engines</p>
+</li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/setup_dsa.sh -d dsa0 -w <span class="m">1</span> -m s -e <span class="m">4</span>
+</pre></div>
+</div>
+<ul>
+<li><p>Dedicated WQ Bandwidth</p>
+<p>Stream memmove descriptors from single cpu core (core 5) to DWQ on DSA device.
+Submit upto queue depth of 128, each descriptor with transfer size = 4KB,
+source data in memory, destination write allocated in the LLC (i.e. set cache control flag to 1).
+Run 1000 iterations with continuous descriptor submission (i.e. submit new descriptors
+each time one or more complete). Each descriptor submission uses a different
+cacheline address in the work queue portal region. For DWQs there can be multiple
+movdir64b instructions in flight and with “-c”, we get higher throughput of
+movdir64b instructions through the SoC fabric.</p>
+</li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -n128 -s4k -j -c -f -i1000 -k5 -w0 -zF,F -o3
+</pre></div>
+</div>
+<ul>
+<li><p>Shared WQ Bandwidth</p>
+<p>To keep the DSA fully busy we use 4 CPUs to account for the higher latency of
+the enqcmd instruction. The “-c” parameter is not relevant here since there can be only
+a single enqcmd instruction in flight at any given point.</p>
+</li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -n128 -s4k -j -f -i1000 -k5-8 -w1 -zF,F -o3
+</pre></div>
+</div>
+<ul>
+<li><p>Batch Descriptor Memove Bandwidth</p>
+<p>Batch descriptors can be used to keep the device fully busy and obtain maximum
+memove bandwidth  when submitting from a single CPU to a shared WQ.</p>
+</li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -n<span class="k">$((</span> <span class="m">128</span> <span class="o">*</span> <span class="m">4</span> <span class="k">))</span> -b4  -s4k -j -f -i1000 -k5 -w1 -zF,F -o3
+</pre></div>
+</div>
+<ul>
+<li><p>Latency Measurement</p>
+<p>Measure latency of single memmove descriptor with synchronous completion;
+submitted from single cpu core (core 1) to DWQ on DSA device. Each memmove is
+1KB size, source data in memory, destination write allocated in the LLC
+(i.e., set cache control flag to 1). Use a group that has a single engine for
+these measurements to avoid overlap of consecutive operations.</p>
+<ul class="simple">
+<li><p>Measure with IOMMU Non-Leaf Cache hit, device TLB miss. Use a stride that is the max
+of (page size, align_high(transfer size, page size)). This test uses 2 pairs of src
+and dest buffers, since the test uses a single engine and the stride between
+src addresses (and dest addresses) in the 2 descriptors is 4K, the
+src and dest addresses of any given descriptor miss the TLB entry installed as part
+of executing the previous descriptor.</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -n2 -w0 -o3 -zF,F -f -s1k -i100 -k1 -q1 -t4k
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Measure with device TLB hit.</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -n1 -w0 -o3 -zF,F -f -s1k -i100 -k1 -q1
+</pre></div>
+</div>
+</li>
+<li><p>Multiple DSAs with Dedicated WQ (use different cores if SNC mode is turned on).
+Any Dedicated DSA WQ within the same NUMA node is selected if available.</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -jcf -k0-3 -n32 -o3 -zF,F
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Multiple DSAs with Shared WQ (use different cores if SNC mode is turned on).</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./src/dsa_perf_micros -jcf -K<span class="o">[</span><span class="m">0</span>-3<span class="o">]</span>@dsa0,0 -K<span class="o">[</span><span class="m">4</span>-7<span class="o">]</span>@dsa2,0 -K<span class="o">[</span><span class="m">8</span>-11<span class="o">]</span>@dsa4,0 -K<span class="o">[</span><span class="m">12</span>-15<span class="o">]</span>@dsa6,0 -n32 -o3 -zF,F
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Running with logging enabled (Build with logging enabled as described in build
+steps)</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">DSA_PERF_MICROS_LOG_LEVEL</span><span class="o">=</span>info ./src/dsa_perf_micros -jcf -k0-3  -n32 -o3 -zF,F -i10000
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Intel® DSA Performance Micros</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system_requirements.html">System Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_configuration.html">System Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Build</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dsa_configuration.html">DSA Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="options.html">Command Line Options</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample Command Lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iommu_off.html">intel_iommu=off mode/VT-D disabled</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submitting_patches.html">Submitting Patches</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="options.html" title="previous chapter">Command Line Options</a></li>
+      <li>Next: <a href="iommu_off.html" title="next chapter">intel_iommu=off mode/VT-D disabled</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Intel® Corporation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/sample_command_lines.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
