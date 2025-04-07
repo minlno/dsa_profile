@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: GPL-2.0
+
+accel-config(1)
+===============
+
+NAME
+----
+accel-config - configure and control DSA(data streaminng accelerator) subsystem devices
+
+SYNOPSIS
+--------
+[verse]
+'accel-config' [--list-cmds] [--version] [--help] [OPTIONS] COMMAND [ARGS]
+
+OPTIONS
+-------
+-v::
+--version::
+  Display accel-config version.
+
+-h::
+--help::
+  Displays help information on commands.
+
+--list-cmds::
+  List available accel-config commands.
+
+DESCRIPTION
+-----------
+accel-config provides ability to display the accelerator's state presented by
+the Linux driver via sysfs, configure the device via sysfs, and saving and
+loading the configuration.
+
+include::../copyright.txt[]
+
+SEE ALSO
+--------
+accel-config enable-wq(1),
+accel-config disable-wq(1),
+accel-config enable-device(1),
+accel-config disable-device(1),
+accel-config load-config(1),
+accel-config save-config(1),
+accel-config list(1),
+accel-config config-device(1),
+accel-config config-group(1),
+accel-config config-wq(1),
+accel-config config-engine(1),
+accel-config config-user-default(1),

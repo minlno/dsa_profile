@@ -1,0 +1,320 @@
+accel-config (4.1.8-1) unstable; urgency=medium
+
+  * [ Jerry Snitselaar ]
+  * Check for error return from iaa_do_crypto
+  * Clean up resource leak in accfg_wq_get_occupancy
+  * [ shangsong2 ]
+  * Update dsa_config_test_runner.sh
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Tue, 30 Jul 2024 23:19:39 -0400
+
+accel-config (4.1.7-1) unstable; urgency=medium
+
+  * [ Adrian Huang ]
+  * Typo fixes
+  * [ Jerry Snitselaar ]
+  * Make verbose logging optional
+  * Clean up typo
+  * Don't attempt to disable non-existent devices
+  * [ Ramesh Thomas ]
+  * Don't list attributes not present
+  * [ Robert Dower ]
+  * add required SECURITY.md file for OSSF Scorecard compliance
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Tue, 11 Jun 2024 14:53:12 -0400
+
+accel-config (4.1.6-1) unstable; urgency=medium
+
+  [ Hentabli, Abdelrahim ]
+  * Free driver_name when freeing wq
+
+  [ Rex Zhang ]
+  * Disable all WQs and rmmod iaa_crypto
+  * Remove the script about vfio passthrough device
+  * Use madvise(MADV_DONTNEED) to ummap address
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Thu, 29 Feb 2024 13:31:15 -0500
+
+accel-config (4.1.5-1) unstable; urgency=medium
+
+  [ Nimish Mishra ]
+  * Free driver_name in case of error adding wq
+
+  [ Tony Zhu ]
+  * change op config default value because of kernel change
+  * set read buffer allowed from 0 to 8
+  * disable enabled devices before unloading iaa_crypto
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Thu, 25 Jan 2024 21:03:54 -0500
+
+accel-config (4.1.4-1) unstable; urgency=medium
+
+  * [ Ramesh Thomas ]
+  * Fix a bug while reading json objects
+  * Do not save traffic class attributes
+  * Handle cmd_status initialization failure without exiting
+  * Remove SET_ERR macro which is error prone
+  * Skip check for ats_disable if attribute absent
+  * [ Rex Zhang ]
+  * Add parameter for specifying dev and wq
+  * Fix bug about checking result of decompression
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Fri, 08 Dec 2023 14:25:17 -0500
+
+accel-config (4.1.3-1) unstable; urgency=medium
+
+  * [ California Sullivan ]
+  * [ Ramesh Thomas ]
+  * be less greedy in _cleanup greps
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Thu, 26 Oct 2023 17:32:23 -0400
+
+accel-config (4.1.2-1) unstable; urgency=medium
+
+  * [ Hentabli, Abdelrahim ]
+  * Fix a memory leak bug
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Tue, 24 Oct 2023 14:24:55 -0400
+
+accel-config (4.1.1-1) unstable; urgency=medium
+
+  * [ Colin Ian King ]
+  * update Standards-Version to 4.6.2 in control file
+  * Use asm volatile for compilers that don't support
+    __builtin_ia32_mfence
+  * [ Ramesh Thomas ]
+  * Fixes for pedantic compiler warnings
+  * Update copyright years in man pages
+  * Fix some syntax errors and cleanup in man pages
+  * Fix --help and other options
+  * Fix a bug with empty wq driver name
+  * [ Rex Zhang ]
+  * Fix bug about finding a mismatched wq
+  * Add op mask to check if an op is available
+  * Decide whether to do the operation or not
+  * [ Tony Zhu ]
+  * Fix batch event log core check output issues
+  * Provide --skip-config to run dsa tests without device reset
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Tue, 05 Sep 2023 15:20:54 -0700
+
+accel-config (4.1-1) unstable; urgency=medium
+
+  [ Colin Ian King ]
+  * add missing libssl-dev dependency
+  * debian/accel-config-test.install fix path on copy
+
+  [ Fenghua Yu ]
+  * Skip configuring ats_disable if the attribute is not present
+  * Add config-user-default command
+  * Add option "-c <config_file>" to load default configurations from
+    the file
+  * Disable default configured WQs and devices
+  * Add "-n <wq_name>" to specify WQ name for disabling WQs
+  * Add user_default_profile.conf
+  * Add doumentation for new command "config-user-default"
+
+  [ Jerry Snitselaar ]
+  * Update spec file templates to use SPDX identifiers
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Mon, 21 Aug 2023 18:08:39 -0700
+
+accel-config (4.0-1) unstable; urgency=medium
+
+  [ Colin Ian King ]
+  * use buildflags.mk, remove hardcoded CFLAGS
+  * debian/accel-config-test.install fix path on copy
+
+  [ Dave Jiang ]
+  * convert all magic number for 1<<12 to PAGE_SIZE
+  * fix madvise() call to unmap pages
+  * add updated idxd.h definition from kernel source
+
+  [ Li Zhang ]
+  * Remove redundant -f 0x0 in iaa_user_test_runner.sh
+  * Fix dedicated mode wq size 1 failure
+  * Modify incorrect print information
+  * Modify block_on_fault in 2g2q_user_2.conf
+  * Move get_random_value() to accel_test.c
+  * Add algorithm to do Zcompress8
+  * Add test code of operation Zcompress8
+  * Modify script for executing Zcompress8 test
+  * Add algorithm to do Zdecompress8
+  * Add test code of operation Zdecompress8
+  * Modify script for executing Zdecompress8 test
+  * Add algorithm to do both Encrypt and Decrypt
+  * Add test code of operation Encrypt
+  * Modify script for executing Encrypt test
+  * Add test code of operation Decrypt
+  * Modify script for executing Decrypt test
+  * Modify struct in idxd.h for IAA Translation Fetch
+  * Add test code of IAA Translation Fetch
+  * Modify script for executing IAA Translation Fetch test
+  * Add helping information for new parameters
+  * Add openssl package installation details
+  * Fix bug of Zcompress8 about input size less 128
+  * Remove ats_disable config for iax tests
+  * Add identification for IAA1.0/2.0 platform
+
+  [ Nikhil Rao ]
+  * add per-wq prs disable tests
+
+  [ Ramesh Thomas ]
+  * Update format bitmask attrs to match driver
+  * Add new API to set and get wq op_config
+  * Add option to config-wq to set op_config
+  * Change json listing format of bitmasks
+  * Add load, save and list config support for op_config
+  * Update config-wq doc with op_config details
+  * Add unit test for op_config configuration
+  * Fix segmentation fault during list cmd in SPR
+  * Add API to retrieve iaa_cap when available
+  * Add group->desc_progress_limit support
+  * Add group->batch_progress_limit support
+  * Add wq->prs_disable support
+  * Add device->event_log_size support
+  * Do not set traffic class in tests
+  * Skip op_config test if feature not present
+  * Include IAA support in README
+  * Fix bug in return value of pasid enabled check
+
+  [ Tony Zhu ]
+  * add DIX Generate operation support
+  * add translation fetch operation support
+  * Remove traffic config for iax tests
+  * Fix dsa_test segmentation fault when do 2G tests
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Tue, 07 Mar 2023 22:51:22 -0500
+
+accel-config (3.5.3-1) unstable; urgency=medium
+
+  [ Colin Ian King ]
+  * pull in various debian changes
+  * sync changelog entry with debian uploaded version
+  * free allocated path if execlp fails
+
+  [ Li Zhang ]
+  * Fix bug of setting max destination size
+
+  [ Ramesh Thomas ]
+  * Remove some leftover references to mdev
+  * Remove text about installing kernel headers
+  * Install tests in /usr/libexec
+  * Update RPM scripts to install tests in /usr/libexec
+  * Remove uninitialized local variable warning
+  * Modify script to include author in changelog
+
+  [ Tony Zhu ]
+  * Update user test script with path /usr/lib
+  * Update user test script with path /usr/libexec
+  * Remove read_buffers 0 settings from configs
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Thu, 23 Feb 2023 20:42:57 -0800
+
+accel-config (3.5.2-1) unstable; urgency=medium
+
+  * Add tests of other dsa opcodes in dsa user test runner
+  * Fix drain descriptor readback address assignment
+  * Remove mdev implementation
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Mon, 28 Nov 2022 16:08:41 -0800
+
+accel-config (3.5.1-1) unstable; urgency=medium
+
+  * Fix a bug in the --help option
+  * Modify incorrect print information
+  * Fix dedicated mode wq size 1 failure
+  * Remove redundant -f 0x0 in iaa_user_test_runner.sh
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Wed, 23 Nov 2022 11:43:32 -0800
+
+accel-config (3.5.0-1) unstable; urgency=medium
+
+  [ Ramesh Thomas ]
+  * Initial upload of accel-config (Closes: #1024089)
+  * Update debian scripts to install contrib/configs in /etc
+  * Update rpm scripts to install contrib/configs in /etc
+  * Install contrib/configs folder in /etc
+  * Rename IAXTEST to IAATEST in test/common
+  * Make error paths more consistent for add_wq, add_group, add_engine
+  * Clean up unused path variable.
+  * Clean up memory leak, and erroneous assignment
+  * Update debian scripts to install test programs in /usr/lib
+  * Update rpm scripts to install test programs in /usr/lib
+  * Install test programs in /usr/lib
+  * Fix some clang scan-build warnings and bugs
+  * Fix various typos and spelling mistakes in code and comments
+  * debian/control: set architecture to just i386 and amd64
+  * debian: libaccel library should be suffixed with 1
+  * test/common: Make bash script executable
+  * debian/copyright: remove trailing comments, clean up linitan
+    warnings
+  * debian/copyright: clean up lintian copyright warnings
+  * debian/copyright: clean up globbing order lintian warnings
+  * debian/rules: add execute bit to script
+
+  [ Dimitri John Ledkov ]
+  * Correct multi-arch config:
+    - do not use conflicting /usr/lib libdir, use debhelper's default
+    multiarch libdir
+    - this results in correct multi-arch pkgconfig placement, note
+    previous override was doubly incorrect as it was creating subdir
+    /libaccel-config.pc/libaccel-config.pc
+    - update install files
+    - mark libaccel* packages Multi-Arch:same
+    - ensure that .1. soname abi is mentioned in libaccel-config1.install
+    to avoid accidental packaging of any future soname (e.g. 2) in the
+    libaccel-config1 package.
+  * Add proper libaccel-config1.symbols file to enforce abi stability
+  * Bump standards version to current
+  * change descriptions to start with lower case and without training '.'
+  * Move test binaries to libexec, as per RHEL and Debian packaging
+    guidelines
+  * Change 'common' from data to scripts, as it was chmoded to +x later
+    anyway
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Fri, 14 Oct 2022 17:25:50 -0700
+
+accel-config (3.4.8-1) unstable; urgency=medium
+
+  * load/unload idxd_vdev and iaa_crypto modules at cleanup
+  * replace token with read_buffer in test config files
+  * replace token with read_buffer of config files in contrib
+  * Modify incorrect printing format
+  * Modify script for executing Expand test
+  * Add test code of operation Expand
+  * Add the algorithm of operation Expand
+  * Modify script for executing Find unique test
+  * Add test code of operation Find unique
+  * Add the algorithm of operation Find unique
+  * Modify script for executing RLE burst test
+  * Add test code of operation RLE burst
+  * Add the algorithm of operation RLE burst
+  * Modify script for executing Select test
+  * Add test code of operation Select
+  * Add the algorithm of operation Select
+  * Modify script for executing Extract test
+  * Add test code of operation Extract
+  * Add the algorithm of operation Extract
+  * Modify script for executing Set membership test
+  * Add test code of operation Set membership
+  * Add the algorithm of operation Set membership
+  * Modify script for executing Scan test
+  * Add test code of operation Scan
+  * Add the algorithm of operation Scan
+  * Add file to place algorithms of operation filter
+  * Modify input parameter of main function
+  * Add macro to enable bit for Operation flags
+  * Add iaa_test into .gitignore
+  * Fix dsa_test reports opposite WQ mode output info
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Wed, 21 Sep 2022 14:14:49 -0700
+
+accel-config (3.4.7-1) unstable; urgency=medium
+
+  * debdch.sh was not processing commit tags correctly
+  * Fix last log entry missing bug in debdch.sh
+  * Add zlib package installation details
+  * Add contrib/config folder to installation
+
+ -- Ramesh Thomas <ramesh.thomas@intel.com>  Mon, 22 Aug 2022 20:29:22 -0700

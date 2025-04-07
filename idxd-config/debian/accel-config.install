@@ -1,0 +1,3 @@
+usr/bin/accel-config
+usr/share/man/man1/accel-config*
+etc/accel-config/contrib/configs/*
