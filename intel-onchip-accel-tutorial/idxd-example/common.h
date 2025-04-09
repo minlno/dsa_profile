@@ -17,6 +17,7 @@
 #define BATCH_SIZE    4
 #define BUF_SIZE      4
 
+/*
 struct dsa_delta_record {
 	uint16_t offset;
 	union {
@@ -33,6 +34,7 @@ struct dsa_delta_record {
 		};
 	};
 };
+*/
 
 int single(uint64_t *(data_buf[2][BUF_SIZE]), struct dsa_hw_desc *desc_buf,
                                               struct dsa_completion_record *comp_buf,

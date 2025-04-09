@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. -I/home/mhkim/kernels/linux-ksm-batch/include/uapi
+CFLAGS=-I.
 LDFLAGS = -laccel-config
 DEPS = common.h
 SRCS = offload.c single.c batch.c async.c
