@@ -34,6 +34,7 @@ int single(uint64_t *(data_buf[][BUF_SIZE]), struct dsa_hw_desc *desc_buf,
     	desc_buf[i].completion_addr = (uintptr_t)&(comp_buf[i]);
     } else if (opcode == DSA_OPCODE_CR_DELTA) {
     	desc_buf[i].opcode          = DSA_OPCODE_CR_DELTA;
+	printf("opcode: %x\n", desc_buf[i].opcode);
     	desc_buf[i].src_addr        = (uintptr_t)data_buf[0][i];
     	desc_buf[i].src2_addr        = (uintptr_t)data_buf[1][i];
     	desc_buf[i].completion_addr = (uintptr_t)&(comp_buf[i]);

@@ -5,6 +5,7 @@
 #include <linux/idxd.h>
 
 int opcode = DSA_OPCODE_CR_DELTA;
+//int opcode = DSA_OPCODE_MEMMOVE;
 
 
 int main(int argc, char *argv[]) {
@@ -36,8 +37,10 @@ int main(int argc, char *argv[]) {
   start = rdtsc();
 
   wq_portal = map_wq();
-  if (wq_portal == MAP_FAILED)
+  if (wq_portal == MAP_FAILED) {
+	  printf("MAP FAILED\n");
     return 1;
+  }
 
   printf("[time  ] mapped work queue: %lu\n\n", rdtsc() - start);
   /////////////////////////////////////////////////////////////////////////////

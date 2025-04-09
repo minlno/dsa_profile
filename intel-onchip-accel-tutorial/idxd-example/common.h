@@ -16,6 +16,24 @@
 #define XFER_SIZE     64
 #define BATCH_SIZE    4
 #define BUF_SIZE      4
+
+struct dsa_delta_record {
+	uint16_t offset;
+	union {
+		uint64_t data;
+		struct {
+			uint8_t byte0;
+			uint8_t byte1;
+			uint8_t byte2;
+			uint8_t byte3;
+			uint8_t byte4;
+			uint8_t byte5;
+			uint8_t byte6;
+			uint8_t byte7;
+		};
+	};
+};
+
 int single(uint64_t *(data_buf[2][BUF_SIZE]), struct dsa_hw_desc *desc_buf,
                                               struct dsa_completion_record *comp_buf,
                                               void *wq_portal, int opcode,
@@ -111,11 +129,15 @@ static void * map_wq(void) {
       break;
   }
   accfg_unref(ctx);
-  if (!wq_found)
+  if (!wq_found) {
+	  printf("!wq_found\n");
     return MAP_FAILED;
+  }
   fd = open(path, O_RDWR);
-  if (fd < 0)
+  if (fd < 0) {
+	  printf("failed to open fd with %s\n", path);
     return MAP_FAILED;
+  }
   wq_portal = mmap(NULL, WQ_PORTAL_SIZE, PROT_WRITE, MAP_SHARED | MAP_POPULATE, fd, 0);
   close(fd);
   return wq_portal;
