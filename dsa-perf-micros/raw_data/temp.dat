@@ -1,0 +1,29 @@
+./src/dsa_perf_micros -o 7 -b 1024 -s 8 -D 100 -i 100 -w 0 -zF,F 
+blen                          8
+bstride                       8
+bstride                       8
+nb_bufs                      32
+pg_size                       0
+wq_type                       0
+batch_sz                   1024
+iter                        100
+nb_cpus                       1
+var_mmio                      0
+dma                           1
+verify                        1
+misc_flags                    0
+access_op[0]               Write
+access_op[1]               Write
+access_op[2]               Write
+place_op[0]              Memory
+place_op[1]              Memory
+place_op[2]              Memory
+flags_cmask            ffffffff
+flags_smask                   0
+flags_nth_desc                1
+nb_numa_node                  2
+cpu_desc_work                 0
+Memory affinity
+CPUs in node 0:		-1 -1 -1 
+Buffer Offsets 		0 0 0 
+GB per sec = 0.015388 cpu 17.012938 kopsrate = 3

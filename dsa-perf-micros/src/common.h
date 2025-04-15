@@ -17,7 +17,7 @@
 #define TEST_CHAR	0x55
 #define ALIGN(l)	(((l) + 0xfff) & ~(0xfff))
 #define ARRAY_SIZE(x)	(sizeof((x))/sizeof((x)[0]))
-#define MAX_COMP_RETRY	2000000000
+#define MAX_COMP_RETRY	40000000000
 #define PTR_ADD(p, a)	{ p = (void *)((uintptr_t)(p) + (uintptr_t)a); }
 #define TIME_DELAY_SEC	4
 
@@ -448,6 +448,12 @@ poll_comp_common(struct dsa_completion_record *comp,
 
 	while (comp->status == 0 && lcnt.retry++ < max_retry)
 		do_comp_flags(comp, flags, &lcnt);
+/*
+	while (comp->status == 0) {
+		lcnt.retry++;
+		do_comp_flags(comp, flags, &lcnt);
+	}
+	*/
 
 	if (lcnt.retry > max_retry)
 		ERR("timed out\n");

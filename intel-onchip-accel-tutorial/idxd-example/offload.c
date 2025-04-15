@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
       data_buf[i][j] = (uint64_t *)malloc(XFER_SIZE);
   }
   for (int i = 0; i < BUF_SIZE; i++)
-	  dr_buf[i] = (struct dsa_delta_record *)malloc(XFER_SIZE / 8 * 10);
+	  //dr_buf[i] = (struct dsa_delta_record *)malloc(XFER_SIZE / 8 * 10);
+	  dr_buf[i] = (struct dsa_delta_record *)malloc(XFER_SIZE * 10); // only for 8B offload test
 
   /////////////////////////////////////////////////////////////////////////////
   // Mapping WQ Submission Portal

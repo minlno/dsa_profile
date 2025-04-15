@@ -35,11 +35,13 @@ int single(uint64_t *(data_buf[][BUF_SIZE]), struct dsa_hw_desc *desc_buf,
     } else if (opcode == DSA_OPCODE_CR_DELTA) {
     	desc_buf[i].opcode          = DSA_OPCODE_CR_DELTA;
 	printf("opcode: %x\n", desc_buf[i].opcode);
+	printf("xfer_size: %d\n", desc_buf[i].xfer_size);
     	desc_buf[i].src_addr        = (uintptr_t)data_buf[0][i];
     	desc_buf[i].src2_addr        = (uintptr_t)data_buf[1][i];
     	desc_buf[i].completion_addr = (uintptr_t)&(comp_buf[i]);
 	desc_buf[i].delta_addr = (uint64_t)(uintptr_t)dr_buf[i];
-	desc_buf[i].max_delta_size = XFER_SIZE / 8 * 10;
+	//desc_buf[i].max_delta_size = XFER_SIZE / 8 * 10;
+	desc_buf[i].max_delta_size = XFER_SIZE * 10; // only for 8B offload test
     }
 
     prep += rdtsc() - start;
