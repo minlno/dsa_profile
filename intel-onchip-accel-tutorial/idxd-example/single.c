@@ -15,6 +15,33 @@ int single(uint64_t *(data_buf[][BUF_SIZE]), struct dsa_hw_desc *desc_buf,
   uint64_t submit = 0;
   uint64_t wait = 0;
 
+  // for cacheline compression test (C , C+8)
+  comp_buf[0].status = 0;
+  desc_buf[0].flags = IDXD_OP_FLAG_RCR | IDXD_OP_FLAG_CRAV;
+  desc_buf[0].xfer_size = 56;
+  desc_buf[0].opcode          = DSA_OPCODE_CR_DELTA;
+  desc_buf[0].src_addr        = (uintptr_t)&(data_buf[0][0][0]);
+  desc_buf[0].src2_addr        = (uintptr_t)&(data_buf[0][0][1]);
+  desc_buf[0].completion_addr = (uintptr_t)&(comp_buf[0]);
+  desc_buf[0].delta_addr = (uint64_t)(uintptr_t)dr_buf[0];
+  desc_buf[0].max_delta_size = 80;
+
+    _mm_sfence();
+    enqcmd(wq_portal, &desc_buf[0]);
+
+    while (comp_buf[0].status == 0 && retry++ < MAX_COMP_RETRY) {
+      umonitor(&(comp_buf[0]));
+      if (comp_buf[0].status == 0) {
+        uint64_t delay = __rdtsc() + UMWAIT_DELAY;
+        umwait(UMWAIT_STATE_C0_1, delay);
+      }
+    }
+
+    if (comp_buf[0].status != 1)
+	    printf("[64btest] failed: %x\n", comp_buf[0].status);
+    else
+	    printf("[64btest] passed\n");
+    printf("[64b data] src=%08lx, dst=%08lx, delta_size: %d, delta=%08lx\n", data_buf[0][0][0], data_buf[0][0][1], (int)comp_buf[0].delta_rec_size, dr_buf[0][0].data);
 
   // Submit 4 seprate single offloads in a row
   for (int i = 0; i < BUF_SIZE; i++) {

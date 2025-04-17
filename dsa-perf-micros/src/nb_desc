@@ -1,0 +1,401 @@
+main.c:39:	if (tcfg->misc_flags & (TEST_M64 | TEST_M64MEM))
+main.c:41:	else if (tcfg->misc_flags & (TEST_ENQ | TEST_ENQMEM))
+main.c:43:	else if (tcfg->misc_flags & TEST_DB) {
+main.c:57:	uint32_t max_iter = tcfg->iter;
+main.c:66:	if (tcfg->misc_flags & (TEST_M64MEM | TEST_ENQMEM)) {
+main.c:78:	if (tcfg->misc_flags & (TEST_M64 | TEST_M64MEM))
+main.c:80:	else if (tcfg->misc_flags & (TEST_ENQ | TEST_ENQMEM))
+main.c:88:		if (tcfg->var_mmio) {
+main.c:133:	p = (uintptr_t) (tcpu->tcfg->batch_sz == 1 ? tcpu->comp :
+main.c:152:	d = tcpu->tcfg->op == DSA_OPCODE_BATCH ? tcpu->bdesc : tcpu->desc;
+main.c:159:		if (tcpu->tcfg->cpu_desc_work)
+main.c:160:			init_desc_addr(tcpu, b * tcpu->tcfg->batch_sz,
+main.c:181:	return tcpu->tcfg->var_mmio ?
+main.c:197:	ring_size = tcpu->tcfg->nb_desc;
+main.c:261:	size_t comp_off = d * tcfg->batch_sz * cs;
+main.c:271:			dump_desc(&tcpu->desc[d * tcfg->batch_sz + i]);
+main.c:316:	l = (k + n) % tcfg->nb_desc;
+main.c:321:		d = (d + 1) % tcfg->nb_desc;
+main.c:339:	flags = tcfg->misc_flags;
+main.c:400:				&tcpu->desc[k * tcpu->tcfg->batch_sz + i]))
+main.c:432:		if (poll_comp(tcpu, k, &poll_cnt, tcpu->tcfg->misc_flags)) {
+main.c:489:	nb_desc = tcfg->nb_desc;
+main.c:511:		if (tcpu == &tcfg->tcpu[0])
+main.c:519:	if (tcpu->qd == 1 || tcfg->nb_bufs == 1)
+main.c:531:	for (i = 0; !tcfg->stop && (tcfg->tval_secs || i < tcfg->iter) ; i++) {
+main.c:565:	nb_desc = tcfg->nb_desc;
+main.c:568:	if (tcfg->pg_size == 0 && tcfg->proc) {
+main.c:572:		for (i = 0; i < tcfg->op_info->nb_buf; i++)
+main.c:573:			faultin_range((char *)tcpu->b[i], tcfg->blen_arr[i],
+main.c:574:				tcfg->bstride_arr[i], tcfg->nb_bufs);
+main.c:612:	if (!tcpu->tcfg->dma) {
+main.c:639:		if (tcpu->tcfg->proc)
+main.c:647:	if (tcpu->tcfg->proc)
+main.c:657:		printf("kopsrate = %d", tcfg->kops_rate);
+main.c:658:		if (tcfg->misc_flags & (TEST_ENQ | TEST_ENQMEM))
+main.c:659:			printf(" latency = %d ns", (1000 * 1000) / tcfg->kops_rate);
+main.c:664:	printf("GB per sec = %f", tcfg->bw);
+main.c:665:	if (tcfg->qd == 1 || tcfg->nb_bufs == 1)
+main.c:667:		tcfg->latency, (tcfg->latency * 1E9)/tcfg->cycles_per_sec,
+main.c:668:		tcfg->cycles_per_sec);
+main.c:669:	printf(" cpu %f kopsrate = %d\n", tcfg->cpu_util, tcfg->kops_rate);
+main.c:671:	if (tcfg->drain_desc) {
+main.c:672:		double drain_usec = ((1.0 * tcfg->drain_lat)/tcfg->cycles_per_sec) * 1000000;
+main.c:674:		printf("Drain desc latency = %lu cycles | %f uSec\n", tcfg->drain_lat, drain_usec);
+main.c:682:	bool inf = tcfg->iter == -1;
+main.c:684:	for (i = 0; i < tcfg->nb_cpus; i++) {
+main.c:686:		if (tcfg->proc) {
+main.c:687:			tcfg->tcpu[i].pid = fork();
+main.c:688:			if (tcfg->tcpu[i].pid == -1) {
+main.c:693:			if (tcfg->tcpu[i].pid == 0)
+main.c:694:				test_fn(&tcfg->tcpu[i]);
+main.c:696:			err = pthread_create(&tcfg->tcpu[i].thread, NULL, test_fn,
+main.c:697:				&tcfg->tcpu[i]);
+main.c:705:	if (tcfg->tval_secs) {
+main.c:708:		while (!tcfg->stop) {
+main.c:710:			while (tcfg->tcpu[0].tstart == 0)
+main.c:713:			sleep(tcfg->tval_secs);
+main.c:716:			for (i = 0, err = false; i < tcfg->nb_cpus; i++) {
+main.c:717:				struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+main.c:727:				tcfg->stop = true;
+main.c:732:			tcfg->stop = !inf;
+main.c:736:	for (i = 0; i < tcfg->nb_cpus; i++) {
+main.c:737:		if (tcfg->proc) {
+main.c:738:			if (tcfg->tcpu[i].pid > 0)
+main.c:739:				waitpid(tcfg->tcpu[i].pid, NULL, 0);
+main.c:741:			pthread_join(tcfg->tcpu[i].thread, NULL);
+main.c:744:	for (i = 0; !err && i < tcfg->nb_cpus; i++)
+main.c:745:		if (tcfg->tcpu[i].err)
+main.c:746:			err = tcfg->tcpu[i].err;
+util.c:89:	switch (tcfg->op) {
+util.c:110:		for (i = 0; i < tcfg->nb_bufs; i++)
+util.c:111:			prep_delta_src2(tcpu->src2 + i * tcfg->bstride,
+util.c:112:					tcfg->delta/10, tcfg->blen);
+util.c:116:		src1 = calloc(tcfg->blen, sizeof(char));
+util.c:117:		src2 = calloc(tcfg->blen, sizeof(char));
+util.c:118:		prep_delta_src2(src2, tcfg->delta/10, tcfg->blen);
+util.c:119:		cr_delta(src1, src2, tcpu->delta, tcfg->blen);
+util.c:120:		nb_delta_rec = tcfg->delta_rec_size/sizeof(*dptr);
+util.c:123:		for (i = 1; i < tcfg->nb_bufs; i++) {
+util.c:124:			memmove(dptr, tcpu->delta, tcfg->delta_rec_size);
+util.c:153:	if (!tcfg->verify && !tcfg->op_info->init_req)
+util.c:160:			init_buffers_common(b[i], tcfg->blen_arr[i], tcfg->bstride_arr[i],
+util.c:161:				tcfg->nb_bufs, v[i]);
+util.c:193:	for (i = 0; i < tcfg->nb_numa_node; i++) {
+util.c:194:		void *p = tcfg->numa_mem[i].base_addr;
+util.c:195:		uint64_t sz = page_align_sz(tcfg, tcfg->numa_mem[i].sz);
+util.c:284:		access_place_bufs(tcpu->b[i], tcfg->nb_bufs, tcfg->blen_arr[i],
+util.c:285:			tcfg->bstride_arr[i], tcfg->access_op[i], tcfg->place_op[i]);
+util.c:298:	len = tcfg->blen;
+util.c:309:		src += tcfg->bstride;
+util.c:310:		dst += tcfg->bstride;
+util.c:321:	actual = (struct t10_pi_tuple *)(dst + tcpu->tcfg->bl_len);
+util.c:338:	nb_blocks = tcfg->blen/tcfg->bl_len;
+util.c:340:	src_adj = (tcfg->blen_arr[0] - tcfg->blen)/nb_blocks;
+util.c:341:	dst_adj = (tcfg->blen_arr[1] - tcfg->blen)/nb_blocks;
+util.c:345:		bsrc = src + i * tcfg->bstride_arr[0];
+util.c:346:		bdst = dst + i * tcfg->bstride_arr[1];
+util.c:349:			if (memcmp(bsrc, bdst, tcfg->bl_len)) {
+util.c:354:			if ((tcfg->op == DSA_OPCODE_DIF_INS ||
+util.c:355:				tcfg->op == DSA_OPCODE_DIF_UPDT)
+util.c:361:			bsrc += tcfg->bl_len + src_adj;
+util.c:362:			bdst += tcfg->bl_len + dst_adj;
+util.c:397:	len = tcfg->blen;
+util.c:402:			if (d8[j] != tcfg->fill) {
+util.c:404:				tcfg->fill, d8[j]);
+util.c:412:		f1 = (uint8_t *)&tcfg->fill;
+util.c:423:		dst += tcfg->bstride;
+util.c:437:	if (!tcfg->verify)
+util.c:458:	nb_delta_rec = tcfg->delta_rec_size/sizeof(*dptr);
+util.c:475:		dst += tcfg->bstride;
+util.c:488:	if (!tcfg->verify)
+util.c:491:	switch (tcfg->op) {
+util.c:529:	if (!tcfg->verify)
+util.c:532:	return  tcfg->op == DSA_OPCODE_DUALCAST ?
+util.c:534:				tcpu->src, tcfg->nb_bufs) :
+util.c:536:				tcfg->nb_bufs);
+util.c:586:	for (i = 0; i < tcfg->nb_numa_node; i++) {
+util.c:587:		if (!tcfg->numa_nb_cpu[i])
+util.c:590:		for (j = 0; j < tcfg->op_info->nb_buf; j++)
+util.c:591:			fprintf(stdout, "%d ", tcfg->numa_node[i][j]);
+util.c:602:	for (i = 0; i < tcfg->op_info->nb_buf; i++)
+util.c:603:		fprintf(stdout, "%hd ", tcfg->buf_off[i]);
+util.c:616:	{.name_str = #x, .off = offsetof(struct tcfg, x), .size = sizeof(tcfg->x), .base = (b) }
+util.c:691:	for (i = 0; i < tcfg->nb_cpus; i++) {
+util.c:692:		struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+util.c:716:	use_tval_secs = !!tcfg->tval_secs;
+util.c:717:	use_tval_secs &= !(!tcfg->dma && tcfg->nb_cpus == 1);
+util.c:720:		tcfg->bw_cycles = tcfg->cycles = tcfg->cycles_per_sec * tcfg->tval_secs;
+util.c:724:	for (i = 0; i < tcfg->nb_cpus; i++) {
+util.c:725:		struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+util.c:738:	tcfg->cycles = cycles / tcfg->nb_cpus;
+util.c:739:	tcfg->bw_cycles = tcfg->dma ? max - min : tcfg->cycles;
+util.c:745:	if (tcfg->dma) {
+util.c:746:		uint64_t retry_cycles = (tcfg->retry * tcfg->cycles_per_sec)/tcfg->retries_per_sec;
+util.c:753:		ca = retry_cycles + tcfg->mwait_cycles;
+util.c:754:		tcfg->cpu_util = 100.0 * (1 - (1.0 * ca)/tcfg->cycles);
+util.c:756:		tcfg->cpu_util = 100;
+util.c:762:	uint64_t usecs = (tcfg->cycles * 1000 * 1000)/tcfg->cycles_per_sec;
+util.c:764:	tcfg->kops_rate = (tcfg->iter * 1000) / usecs;
+util.c:771:	uint64_t usecs = (tcfg->bw_cycles * 1000 * 1000)/tcfg->cycles_per_sec;
+util.c:777:	nb_ops = tcfg->iter * tcfg->nb_cpus * tcfg->nb_bufs;
+util.c:779:	if (tcfg->op == DSA_OPCODE_CFLUSH)
+util.c:780:		nb_ops = (nb_ops * tcfg->blen)/64;
+util.c:781:	else if (tcfg->op == DSA_OPCODE_CR_DELTA)
+util.c:782:		nb_ops = (nb_ops * tcfg->blen)/4096;
+util.c:784:	tcfg->kops_rate = (nb_ops * 1000)/usecs;
+util.c:792:	secs = (float)tcfg->bw_cycles/tcfg->cycles_per_sec;
+util.c:793:	tcfg->bw = tcfg->iter * (data_size_per_iter(tcfg)/secs)/1000000000;
+util.c:799:	tcfg->latency = 1.0 * tcfg->cycles / tcfg->iter;
+util.c:801:	if (!(tcfg->misc_flags & (TEST_M64|TEST_DB | TEST_M64MEM | TEST_ENQ | TEST_ENQMEM)))
+util.c:802:		tcfg->latency /= tcfg->nb_desc;
+util.c:813:	for (i = 0; i < tcfg->nb_cpus; i++) {
+util.c:814:		tcpu = &tcfg->tcpu[i];
+util.c:824:	tcfg->drain_lat = drain_lat;
+util.c:830:	/* use tcfg->iter */
+util.c:831:	if (!tcfg->tval_secs)
+util.c:836:	 * to be excluded, tcfg->cycles is updated every iter with the cycles
+util.c:841:	if (!tcfg->dma && tcfg->nb_cpus == 1) {
+util.c:842:		if (tcfg->iter == -1)
+util.c:843:			tcfg->iter = 0;
+util.c:844:		tcfg->iter += nb_iter;
+util.c:848:	tcfg->iter = nb_iter / tcfg->nb_cpus;
+util.c:862:	tcfg->retry = is.retry / tcfg->nb_cpus;
+util.c:863:	tcfg->mwait_cycles = is.mwait_cycles / tcfg->nb_cpus;
+util.c:896:				tcfg->proc ? PTHREAD_PROCESS_SHARED :
+util.c:899:	pthread_condattr_setpshared(&td->cv_attr, !!tcfg->proc);
+util.c:903:	tcfg->td = td;
+util.c:914:		tcfg->td->err = err;
+util.c:916:	if (tcfg->nb_cpus == 1)
+util.c:919:	pthread_mutex_lock(&tcfg->td->mutex);
+util.c:920:	tcfg->td->barrier_cnt++;
+util.c:921:	if (tcfg->td->barrier_cnt < tcfg->nb_cpus)
+util.c:922:		pthread_cond_wait(&tcfg->td->cv, &tcfg->td->mutex);
+util.c:924:		tcfg->td->barrier_cnt = 0;
+util.c:925:		pthread_cond_broadcast(&tcfg->td->cv);
+util.c:927:	pthread_mutex_unlock(&tcfg->td->mutex);
+util.c:929:	return tcfg->td->err;
+util.c:935:	struct thread_data *td = tcfg->td;
+prep.c:26:	uint64_t off = tcpu->tcfg->bstride * begin;
+prep.c:33:		off = off + tcpu->tcfg->bstride;
+prep.c:44:	uint64_t src_stride = tcfg->delta_rec_size;
+prep.c:45:	uint64_t dst_stride = tcfg->bstride;
+prep.c:59:	uint64_t off = tcpu->tcfg->bstride * begin;
+prep.c:64:		d->dst_addr = rte_mem_virt2iova(tcpu->dst + off + i * tcpu->tcfg->bstride);
+prep.c:70:	uint64_t off = tcpu->tcfg->bstride * begin;
+prep.c:75:		d->src_addr = rte_mem_virt2iova(tcpu->src + off + i * tcpu->tcfg->bstride);
+prep.c:82:	uint32_t off = tcpu->tcfg->bstride * begin;
+prep.c:88:		off = off + tcpu->tcfg->bstride;
+prep.c:97:	uint32_t off = tcfg->bstride * begin;
+prep.c:104:		off = off + tcpu->tcfg->bstride;
+prep.c:116:	off_src = begin * tcfg->bstride_arr[0];
+prep.c:117:	off_dst = begin * tcfg->bstride_arr[1];
+prep.c:121:		off_src += tcfg->bstride_arr[0];
+prep.c:125:		off_dst += tcfg->bstride_arr[1];
+prep.c:132:	switch (tcpu->tcfg->op) {
+prep.c:237:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:252:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:263:	memset(&tcfg->fill, TEST_CHAR, sizeof(tcfg->pat));
+prep.c:264:	desc->pattern = tcfg->fill;
+prep.c:277:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:288:	memset(&tcfg->pat, TEST_CHAR, sizeof(tcfg->pat));
+prep.c:289:	desc->comp_pattern = tcfg->pat;
+prep.c:301:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:312:	uint32_t delta_rec_size = tcfg->delta_rec_size;
+prep.c:323:	desc->max_delta_size = max(80, tcfg->delta_rec_size);
+prep.c:325:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:342:	desc->delta_rec_size = tcfg->delta_rec_size;
+prep.c:344:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:359:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:368:	return	tcfg->blen + 8 * tcfg->blen/dif_block_len(tcfg->bl_idx);
+prep.c:379:	nb_block = tcfg->blen/tcfg->bl_len;
+prep.c:386:			t10 = (struct t10_pi_tuple *)&block[tcfg->bl_len];
+prep.c:389:							tcfg->bl_len,
+prep.c:395:			block += tcfg->bl_len + 8;
+prep.c:398:		b += tcfg->bstride;
+prep.c:409:	nb_block = tcfg->blen/tcfg->bl_len;
+prep.c:413:						tcfg->bl_len,
+prep.c:419:		src += tcfg->bl_len;
+prep.c:420:		if (tcfg->op == DSA_OPCODE_DIF_UPDT)
+prep.c:501:	off_src = tcfg->bstride_arr[0];
+prep.c:503:	dsa_prep_dif_flags(tcfg->op, tcfg->bl_idx, dif_flags, desc, app_tag, ref_tag);
+prep.c:505:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:507:		if (tcfg->op != DSA_OPCODE_DIF_INS)
+prep.c:510:			tcfg->op == DSA_OPCODE_DIF_INS ? tcfg->blen :
+prep.c:513:		if (tcfg->op == DSA_OPCODE_DIF_INS || tcfg->op == DSA_OPCODE_DIF_UPDT)
+prep.c:619:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:620:		tcpu->crc[i] = crc32(0, src, tcfg->blen, tcpu->tcfg->flags_smask);
+prep.c:621:		src += tcfg->bstride;
+prep.c:638:	for (i = 0; i < tcfg->nb_bufs; i++)
+prep.c:649:	if (!tcfg->shuffle_descs)
+prep.c:652:	for (i = tcfg->nb_bufs; i > 0; i--) {
+prep.c:671:	if (tcfg->batch_sz <= 1)
+prep.c:674:	for (i = 0; i < tcfg->nb_desc; i++) {
+prep.c:678:		desc->desc_count = min(tcfg->batch_sz,
+prep.c:679:					tcfg->nb_bufs - i * tcfg->batch_sz);
+prep.c:680:		desc->desc_list_addr = rte_mem_virt2iova(&tcpu->desc[i * tcfg->batch_sz]);
+prep.c:703:	desc.opcode = tcfg->op;
+prep.c:707:	if (tcfg->op != DSA_OPCODE_NOOP)
+prep.c:708:		desc.xfer_size = tcfg->blen;
+prep.c:712:	switch (tcfg->op) {
+prep.c:766:		ERR("Unrecognized op %d\n", tcfg->op);
+prep.c:775:	for (i = 0; i < tcfg->nb_bufs; i++) {
+prep.c:782:		if (tcfg->pg_size == 0 && tcfg->proc)
+prep.c:785:		pd[i].flags |= tcfg->ccmask;
+prep.c:786:		if (tcfg->flags_nth_desc > 0 && (i+1) % tcfg->flags_nth_desc == 0) {
+prep.c:787:			pd[i].flags &= tcfg->flags_cmask;
+prep.c:788:			pd[i].flags |= tcfg->flags_smask;
+prep.c:790:		pd[i].flags &= ~resv_flags[tcfg->op];
+prep.c:795:	if (tcfg->drain_desc) {
+prep.c:801:		pd = desc_ptr(tcpu) + tcfg->nb_desc - 1;
+common.h:293:	return tcfg->op == DSA_OPCODE_NOOP &&
+common.h:294:		tcfg->misc_flags & (TEST_M64 | TEST_DB | TEST_M64MEM | TEST_ENQ | TEST_ENQMEM);
+common.h:471:	int pg_size = tcfg->pg_size;
+common.h:479:	return tcpu->tcfg->batch_sz == 1 ? tcpu->desc :
+common.h:503:	switch (tcfg->op) {
+common.h:513:		sz = (tcfg->delta_rec_size/sizeof(dc)) * sizeof(dc.val);
+common.h:517:		sz = tcfg->blen;
+common.h:521:	return sz * tcfg->nb_cpus * tcfg->nb_bufs;
+device.c:103:	dd = tcfg->driver;
+init.c:65:	return numa_node < tcfg->nb_numa_node ?
+init.c:66:			&tcfg->numa_mem[numa_node] :
+init.c:94:	return tcfg->numa_node[n][bid] == -1 ?
+init.c:95:		n : tcfg->numa_node[n][bid];
+init.c:109:	int fd = tcfg->mmio_fd_idx[bid];
+init.c:111:	tcfg->mmio_mem[fd].sz += off;
+init.c:113:	return alloc_offset(sz, &tcfg->mmio_mem[fd].sz);
+init.c:128:	for (i = 0; i < tcfg->nb_cpus; i++) {
+init.c:129:		int node = tcfg->tcpu[i].numa_node;
+init.c:130:		struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+init.c:133:		if (tcfg->dma) {
+init.c:135:					tcfg->nb_bufs * sizeof(tcpu->desc[0]), node, 0);
+init.c:136:			if (tcfg->batch_sz > 1)
+init.c:138:					tcfg->nb_desc * sizeof(tcpu->bdesc[0]), node, 0);
+init.c:144:			tcpu->comp = alloc_numa_offset(tcfg, tcfg->nb_bufs * cs,
+init.c:147:			if (tcfg->batch_sz > 1)
+init.c:149:								tcfg->nb_desc * cs,
+init.c:160:	for (j = 0; j < tcfg->op_info->nb_buf; j++) {
+init.c:161:		for (i = 0; i < tcfg->nb_cpus; i++) {
+init.c:162:			struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+init.c:163:			uint64_t sz = tcfg->bstride_arr[j] * tcfg->nb_bufs;
+init.c:165:			if (tcfg->mmio_mem[j].bfile)
+init.c:166:				tcpu->b[j] = alloc_mmio_offset(tcfg, sz, j, tcfg->buf_off[j]);
+init.c:169:				tcpu->b[j] = alloc_numa_offset(tcfg, sz, n, tcfg->buf_off[j]);
+init.c:187:		if (tcfg->mmio_mem[i].sz == 0)
+init.c:190:		fname = tcfg->mmio_mem[i].bfile;
+init.c:197:		addr = mmap(NULL, tcfg->mmio_mem[i].sz, PROT_READ | PROT_WRITE,
+init.c:198:			MAP_POPULATE | MAP_SHARED, fd, tcfg->mmio_mem[i].mmio_offset);
+init.c:206:		tcfg->mmio_mem[i].base_addr = addr;
+init.c:225:	if (tcfg->malloc) {
+init.c:226:		*paddr = tcfg->malloc(sz, 4096, n);
+init.c:230:	fd = memfd_create("temp", huge_flags[tcfg->pg_size]);
+init.c:275:	for (i = 0; i < tcfg->nb_numa_node; i++) {
+init.c:277:		struct numa_mem *nm = &tcfg->numa_mem[i];
+init.c:298:	for (i = 0; i < tcfg->nb_cpus; i++) {
+init.c:299:		struct tcfg_cpu *tcpu = &tcfg->tcpu[i];
+init.c:304:		if (tcfg->dma) {
+init.c:305:			if (tcfg->batch_sz > 1) {
+init.c:317:		for (j = 0; j < tcfg->op_info->nb_buf; j++) {
+init.c:318:			uint32_t off = tcfg->op_info->b_off[j];
+init.c:321:			if (tcfg->mmio_mem[j].bfile) {
+init.c:322:				int idx = tcfg->mmio_fd_idx[j];
+init.c:323:				ba = (uint64_t)tcfg->mmio_mem[idx].base_addr;
+init.c:333:	if (tcfg->pg_size != 0)
+init.c:359:	if (!tcfg->dma)
+init.c:368:	tcpu->wq = wq_map(tcpu->dname, tcpu->wq_id, tcfg->wq_type == 1,
+init.c:379:	tcpu->qd = tcfg->qd == 0 ? tcpu->wq_info->size : tcfg->qd;
+init.c:380:	tcpu->qd = min(tcpu->qd, tcfg->nb_desc);
+init.c:396:	if (!tcfg->dma)
+init.c:400:	tcpu->err = dmap(fd, tcpu->desc, ALIGN(tcfg->nb_bufs * sizeof(tcpu->desc[0])));
+init.c:404:	if (tcfg->batch_sz > 1) {
+init.c:405:		tcpu->err = dmap(fd, tcpu->bdesc, ALIGN(tcfg->nb_desc * sizeof(tcpu->bdesc[0])));
+init.c:412:	tcpu->err = dmap(fd, tcpu->comp, ALIGN(tcfg->nb_bufs * sizeof(tcpu->comp[0]) * 2));
+init.c:418:	if (tcfg->batch_sz > 1) {
+init.c:420:				ALIGN(tcfg->nb_desc * comp_rec_cache_aligned_size(tcpu)));
+init.c:427:	for (i = 0; i < tcfg->op_info->nb_buf; i++) {
+init.c:428:		uint64_t sz = tcfg->bstride_arr[i] * tcfg->nb_bufs;
+init.c:441:		uint64_t sz = tcfg->bstride_arr[i] * tcfg->nb_bufs;
+init.c:446:	if (tcfg->batch_sz > 1)
+init.c:447:		dmap(fd, tcpu->bcomp, ALIGN(tcfg->nb_desc * comp_rec_cache_aligned_size(tcpu)));
+init.c:450:	dunmap(fd, tcpu->comp, ALIGN(tcfg->nb_bufs * sizeof(tcpu->comp[0]) * 2));
+init.c:453:	if (tcfg->batch_sz > 1)
+init.c:454:		dunmap(fd, tcpu->bdesc, ALIGN(tcfg->nb_desc * sizeof(tcpu->bdesc[0])));
+init.c:456:	dunmap(fd, tcpu->desc, ALIGN(tcfg->nb_bufs * sizeof(tcpu->desc[0])));
+init.c:467:	switch (tcfg->op) {
+init.c:471:		return tcfg->nb_bufs * sizeof(tcpu.crc[0]);
+init.c:475:		nb_blocks = tcfg->blen/tcfg->bl_len;
+init.c:522:	if (!tcfg->dma || !tcpu->wq_info)
+init.c:527:	dunmap(fd, tcpu->desc, ALIGN(tcfg->nb_bufs * sizeof(tcpu->desc[0])));
+init.c:529:	if (tcfg->batch_sz > 1)
+init.c:530:		dunmap(fd, tcpu->bdesc, ALIGN(tcfg->nb_desc * sizeof(tcpu->bdesc[0])));
+init.c:532:	dunmap(fd, tcpu->comp, ALIGN(tcfg->nb_bufs * sizeof(tcpu->comp[0]) * 2));
+init.c:533:	dunmap(fd, tcpu->bcomp, ALIGN(tcfg->nb_desc * comp_rec_cache_aligned_size(tcpu)));
+init.c:535:	for (i = 0; i < tcfg->op_info->nb_buf; i++) {
+init.c:536:		uint64_t sz = tcfg->bstride_arr[i] * tcfg->nb_bufs;
+init.c:547:	for (i = 0; i < tcfg->nb_numa_node; i++)
+init.c:548:		munmap(tcfg->numa_mem[i].base_addr,
+init.c:549:			page_align_sz(tcfg, tcfg->numa_mem[i].sz));
+init.c:551:	for (i = 0; tcfg->op_info && i < tcfg->op_info->nb_buf; i++) {
+init.c:552:		munmap(tcfg->mmio_mem[i].base_addr, align(tcfg->mmio_mem[i].sz, 4096));
+init.c:553:		free(tcfg->mmio_mem[i].bfile);
+init.c:556:	if (tcfg->tcpu) {
+init.c:557:		for (i = 0; i < tcfg->nb_cpus; i++) {
+init.c:558:			free(tcfg->tcpu[i].dname);
+init.c:559:			test_free_op_priv(&tcfg->tcpu[i]);
+init.c:561:		munmap(tcfg->tcpu, align(tcfg->nb_cpus * sizeof(*tcfg->tcpu), 4096));
+init.c:565:	free(tcfg->numa_node);
+init.c:566:	free(tcfg->numa_mem);
+init.c:664:	if (tcfg->batch_sz == 1)
+init.c:665:		return tcfg->nb_bufs;
+init.c:667:	return tcfg->nb_bufs/tcfg->batch_sz +
+init.c:668:			!!(tcfg->nb_bufs % tcfg->batch_sz);
+init.c:697:	tcfg->numa_mem = nm;
+init.c:698:	tcfg->numa_nb_cpu = numa_nb_cpu;
+init.c:700:	for (i = 0; i < tcfg->nb_cpus; i++) {
+init.c:703:		cpu_pin(tcfg->tcpu[i].cpu_num);
+init.c:705:		tcfg->tcpu[i].numa_node = n;
+init.c:711:	if (tcfg->nb_numa_node == 0) {
+init.c:713:			memmove(&numa_node[i], &tcfg->numa_node_default[i],
+init.c:714:				sizeof(tcfg->numa_node[0]));
+init.c:715:		tcfg->nb_numa_node = nb_numa_node;
+init.c:716:		tcfg->numa_node = numa_node;
+init.c:720:	if (tcfg->nb_numa_node && tcfg->nb_numa_node != nb_cpu_node) {
+init.c:722:			tcfg->nb_numa_node, nb_cpu_node);
+init.c:733:		memmove(&numa_node[i], &tcfg->numa_node[j], sizeof(numa_node[0]));
+init.c:737:	free(tcfg->numa_node);
+init.c:739:	tcfg->nb_numa_node = nb_numa_node;
+init.c:740:	tcfg->numa_node = numa_node;
+init.c:765:	calibrate(&tcfg->cycles_per_sec);
+init.c:767:	tcfg->nb_desc = calc_nb_desc(tcfg);
+init.c:777:	if (!tcfg->dma)
+init.c:780:	calibrate_retries(&tcfg->retries_per_sec, tcfg->misc_flags);
+cpu.c:87:	if (tcfg->bstride != 0)
+cpu.c:88:		off = tcfg->bstride;
+cpu.c:90:		off = tcfg->blen;
+cpu.c:102:		for (j = 0; j < tcfg->nb_bufs; j++) {
+cpu.c:104:			switch (tcfg->op) {
+cpu.c:107:				memset(dst, TEST_CHAR, tcfg->blen);
+cpu.c:111:				cmpval(src, tcfg->blen);
+cpu.c:115:				memcpy(dst, src, tcfg->blen);
+cpu.c:119:				cmpval(src1, tcfg->blen);
+cpu.c:120:				cmpval(src2, tcfg->blen);
+cpu.c:121:				memset(delta, 0, tcfg->delta_rec_size);
+cpu.c:125:				ap_delta(dst, delta, tcfg->delta_rec_size);
+cpu.c:138:			delta += tcfg->delta_rec_size/sizeof(*delta);
+cpu.c:149:	for (i = 0; i < tcfg->iter || (tcfg->tval_secs && !tcfg->stop); i++) {
+cpu.c:163:		if (tcfg->nb_cpus == 1)
+cpu.c:166:		for (j = 0; j < tcfg->nb_bufs; j++) {
+cpu.c:170:			switch (tcfg->op) {
+cpu.c:172:				memcpy(dst, src, tcfg->blen);
+cpu.c:176:				memset(dst, 0, tcfg->blen);
+cpu.c:180:				cmpval(src, tcfg->blen);
+cpu.c:184:				if (tcfg->ccmask & IDXD_OP_FLAG_CC)
+cpu.c:185:					clwb(dst, tcfg->blen);
+cpu.c:187:					cflush(dst, tcfg->blen);
+cpu.c:191:				cr_delta(src1, src2, delta, tcfg->blen);
+cpu.c:195:				ap_delta(dst, delta, tcfg->delta_rec_size);
+cpu.c:205:			delta += tcfg->delta_rec_size/sizeof(*delta);
+user_device.c:1105:		tcfg->malloc = phys_malloc;
+user_device.c:1181:		udi[i].nb_engines = tcfg->nb_user_eng;
+options.c:503:	nb_cmp = tcfg->blen/8;
+options.c:504:	nb_cmp = (nb_cmp * tcfg->delta)/100;

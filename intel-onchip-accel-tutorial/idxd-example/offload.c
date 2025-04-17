@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
       for (int i = 0; i < 2; i++) { 
         //data_buf[i][j][0] = rand() % 65536;
         data_buf[i][j][0] = rand();
+        data_buf[i][j][1] = rand();
       }
       printf("[data  ] before-%02d: src=%04x, dst=%04x\n", j, (int)data_buf[0][j][0], (int)data_buf[1][j][0]);
       cflush((char*)data_buf[0][j], XFER_SIZE);
