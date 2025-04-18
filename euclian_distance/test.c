@@ -163,14 +163,15 @@ int compute_diff_indices_using_dsa(void *wq_portal,
 }
 
 int main(int argc, char** argv) {
-    if (argc != 4) {
-        printf("Usage: %s <N_v> <dimension> <delta_rate>\n", argv[0]);
+    if (argc != 5) {
+        printf("Usage: %s <N_v> <dimension> <delta_rate> <cflush on/off>\n", argv[0]);
         return 1;
     }
 
     N_V = atoi(argv[1]);
     VECTOR_DIM = atoi(argv[2]);
     float delta_rate = atof(argv[3]);
+    int cache_flush = atoi(argv[4]);
 
     srand(42);
 
@@ -218,6 +219,7 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < N_V; i++) {
 		comp_buf[i].status = 0;
 		desc_buf[i].opcode = DSA_OPCODE_CR_DELTA;
+		//desc_buf[i].flags = IDXD_OP_FLAG_RCR | IDXD_OP_FLAG_CRAV | IDXD_OP_FLAG_CC;
 		desc_buf[i].flags = IDXD_OP_FLAG_RCR | IDXD_OP_FLAG_CRAV;
 		desc_buf[i].xfer_size = VECTOR_DIM * sizeof(float);
 		desc_buf[i].src_addr = (uintptr_t)base[i];
@@ -227,6 +229,12 @@ int main(int argc, char** argv) {
 		desc_buf[i].max_delta_size = VECTOR_DIM * sizeof(float) / 8 * 10;
 	}
 
+    if (cache_flush) {
+	for (int i = 0; i < N_V; i++) {
+		cflush((char*)base[i], VECTOR_DIM * sizeof(float));
+		cflush((char*)delta[i], VECTOR_DIM * sizeof(float));
+	}
+    }
     // 전체 계산 시간
     struct timespec t_start, t_end;
     struct timespec t_start1, t_end1;
@@ -237,6 +245,12 @@ int main(int argc, char** argv) {
     double full_time = get_elapsed_sec(t_start, t_end);
     printf("[FULL L2] Time: %.6f sec\n", full_time);
 
+    if (cache_flush) {
+	for (int i = 0; i < N_V; i++) {
+		cflush((char*)base[i], VECTOR_DIM * sizeof(float));
+		cflush((char*)delta[i], VECTOR_DIM * sizeof(float));
+	}
+    }
     // partial 계산 시간
     double partial_dsa_time, partial_diff_time, partial_delta_time;
     clock_gettime(CLOCK_MONOTONIC, &t_start);
