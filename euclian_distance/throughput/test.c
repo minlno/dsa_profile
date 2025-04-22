@@ -87,6 +87,12 @@ int compute_diff_indices_from_delta_records(uint32_t **indices, int *count,
     return 0;
 }
 
+#define CHECK_ALLOC(ptr, name) \
+    if (!(ptr)) { \
+        fprintf(stderr, "Allocation failed: %s\n", name); \
+        exit(EXIT_FAILURE); \
+    }
+
 int main(int argc, char** argv) {
     if (argc != 6) {
         printf("Usage: %s <N_v> <dimension> <delta_rate> <num_repeat> <mode: full|partial>\n", argv[0]);
@@ -101,14 +107,14 @@ int main(int argc, char** argv) {
 
     srand(42);
 
-    float*** base = malloc(num_repeat * sizeof(float**));
-    float*** delta = malloc(num_repeat * sizeof(float**));
+    float*** base = malloc(num_repeat * sizeof(float**)); CHECK_ALLOC(base, "base");
+    float*** delta = malloc(num_repeat * sizeof(float**)); CHECK_ALLOC(delta, "delta");
     for (int r = 0; r < num_repeat; r++) {
-        base[r] = malloc(N_V * sizeof(float*));
-        delta[r] = malloc(N_V * sizeof(float*));
+        base[r] = malloc(N_V * sizeof(float*)); CHECK_ALLOC(base[r], "base[r]");
+        delta[r] = malloc(N_V * sizeof(float*)); CHECK_ALLOC(delta[r], "delta[r]");
         for (int i = 0; i < N_V; i++) {
-            base[r][i] = aligned_alloc(64, VECTOR_DIM * sizeof(float));
-            delta[r][i] = aligned_alloc(64, VECTOR_DIM * sizeof(float));
+            base[r][i] = aligned_alloc(64, VECTOR_DIM * sizeof(float)); CHECK_ALLOC(base[r][i], "base[r][i]");
+            delta[r][i] = aligned_alloc(64, VECTOR_DIM * sizeof(float)); CHECK_ALLOC(delta[r][i], "delta[r][i]");
             for (int j = 0; j < VECTOR_DIM; j++) {
                 float val = ((float)rand() / RAND_MAX);
                 base[r][i][j] = val;
@@ -121,127 +127,142 @@ int main(int argc, char** argv) {
         }
     }
 
-    float* results = malloc(N_V * sizeof(float));
+    float* results = malloc(N_V * sizeof(float)); 
+    CHECK_ALLOC(results, "results");
     memset(results, 0, N_V * sizeof(float));
     int n_threads = omp_get_max_threads();
-    float** diff_buffers = malloc(n_threads * sizeof(float*));
-    #pragma omp parallel for
+    float** diff_buffers = malloc(n_threads * sizeof(float*)); 
+    CHECK_ALLOC(diff_buffers, "diff_buffers");
     for (int i = 0; i < n_threads; i++) {
-        diff_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float));
+        diff_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float)); 
+	CHECK_ALLOC(diff_buffers[i], "diff_buffers[i]");
     }
 
-    struct timespec t_start, t_end, t_1, t_2;
-
-    if (!is_partial) {
-        clock_gettime(CLOCK_MONOTONIC, &t_start);
-        for (int r = 0; r < num_repeat; r++) {
-            compute_all_distances(base[r], delta[r], results, diff_buffers);
-        }
-        clock_gettime(CLOCK_MONOTONIC, &t_end);
-        double elapsed = get_elapsed_sec(t_start, t_end);
-        double flops = 2.0 * VECTOR_DIM * N_V * num_repeat;
-        double gflops = flops / elapsed / 1e9;
-        printf("[FULL L2] Total Time: %.6f sec | Throughput: %.2f GFLOPS\n", elapsed, gflops);
-    } else {
-        float* results_part = malloc(N_V * sizeof(float));
+    if (is_partial) {
+        float* results_part = malloc(N_V * sizeof(float)); 
+	CHECK_ALLOC(results_part, "results_part");
         float** x_part_buffers = malloc(n_threads * sizeof(float*));
-        float** y_part_buffers = malloc(n_threads * sizeof(float*));
+	CHECK_ALLOC(x_part_buffers, "x_part_buffers");
+        float** y_part_buffers = malloc(n_threads * sizeof(float*)); 
+	CHECK_ALLOC(y_part_buffers, "y_part_buffers");
         for (int i = 0; i < n_threads; i++) {
-            x_part_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float));
-            y_part_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float));
+            x_part_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float)); 
+	    CHECK_ALLOC(x_part_buffers[i], "x_part_buffers[i]");
+            y_part_buffers[i] = aligned_alloc(64, VECTOR_DIM * sizeof(float)); 
+	    CHECK_ALLOC(y_part_buffers[i], "y_part_buffers[i]");
         }
 
-        uint32_t*** indices = malloc(num_repeat * sizeof(uint32_t**));
-        int** count = malloc(num_repeat * sizeof(int*));
+        uint32_t*** indices = malloc(num_repeat * sizeof(uint32_t**)); 
+	CHECK_ALLOC(indices, "indices");
+        int** count = malloc(num_repeat * sizeof(int*)); 
+	CHECK_ALLOC(count, "count");
         struct dsa_delta_record ***dr_buf = malloc(num_repeat * sizeof(struct dsa_delta_record **));
-        struct dsa_hw_desc **desc_buf = malloc(num_repeat * sizeof(struct dsa_hw_desc*));
-        struct dsa_completion_record **comp_buf = malloc(num_repeat * sizeof(struct dsa_completion_record*));
-        struct dsa_hw_desc *batch_desc_array = malloc(num_repeat * sizeof(struct dsa_hw_desc));
-        struct dsa_completion_record *batch_comp_array = aligned_alloc(32, num_repeat * sizeof(struct dsa_completion_record));
+	CHECK_ALLOC(dr_buf, "dr_buf");
+        struct dsa_hw_desc **desc_buf = malloc(num_repeat * sizeof(struct dsa_hw_desc*)); 
+	CHECK_ALLOC(desc_buf, "desc_buf");
+        struct dsa_completion_record **comp_buf = malloc(num_repeat * sizeof(struct dsa_completion_record*)); 
+	CHECK_ALLOC(comp_buf, "comp_buf");
+        struct dsa_hw_desc *batch_desc_array = malloc(num_repeat * sizeof(struct dsa_hw_desc)); 
+	CHECK_ALLOC(batch_desc_array, "batch_desc_array");
+        struct dsa_completion_record *batch_comp_array = aligned_alloc(32, num_repeat * sizeof(struct dsa_completion_record)); 
+	CHECK_ALLOC(batch_comp_array, "batch_comp_array");
 
         for (int r = 0; r < num_repeat; r++) {
-            indices[r] = malloc(N_V * sizeof(uint32_t*));
-            count[r] = malloc(N_V * sizeof(int));
-            dr_buf[r] = malloc(N_V * sizeof(struct dsa_delta_record*));
-            desc_buf[r] = aligned_alloc(64, N_V * sizeof(struct dsa_hw_desc));
-            comp_buf[r] = aligned_alloc(32, N_V * sizeof(struct dsa_completion_record));
+            indices[r] = malloc(N_V * sizeof(uint32_t*)); 
+	    CHECK_ALLOC(indices[r], "indices[r]");
+            count[r] = malloc(N_V * sizeof(int)); 
+	    CHECK_ALLOC(count[r], "count[r]");
+            dr_buf[r] = malloc(N_V * sizeof(struct dsa_delta_record*)); 
+	    CHECK_ALLOC(dr_buf[r], "dr_buf[r]");
+            desc_buf[r] = aligned_alloc(64, N_V * sizeof(struct dsa_hw_desc)); 
+	    CHECK_ALLOC(desc_buf[r], "desc_buf[r]");
+            comp_buf[r] = aligned_alloc(32, N_V * sizeof(struct dsa_completion_record)); 
+	    CHECK_ALLOC(comp_buf[r], "comp_buf[r]");
 
             for (int i = 0; i < N_V; i++) {
-                indices[r][i] = malloc(VECTOR_DIM * sizeof(uint32_t));
-                memset(indices[r][i], 0, VECTOR_DIM * sizeof(uint32_t));
-                count[r][i] = 0;
-
-                dr_buf[r][i] = aligned_alloc(64, (VECTOR_DIM * sizeof(float) / 8 * 10));
+                indices[r][i] = malloc(VECTOR_DIM * sizeof(uint32_t)); 
+		CHECK_ALLOC(indices[r][i], "indices[r][i]");
+                dr_buf[r][i] = aligned_alloc(64, (VECTOR_DIM * sizeof(float) / 8 * 10)); 
+		CHECK_ALLOC(dr_buf[r][i], "dr_buf[r][i]");
                 memset(dr_buf[r][i], 0, (VECTOR_DIM * sizeof(float) / 8 * 10));
-
+                memset(&desc_buf[r][i], 0, sizeof(struct dsa_hw_desc));
+                memset(&comp_buf[r][i], 0, sizeof(struct dsa_completion_record));
                 desc_buf[r][i].opcode = DSA_OPCODE_CR_DELTA;
                 desc_buf[r][i].flags = IDXD_OP_FLAG_RCR | IDXD_OP_FLAG_CRAV;
                 desc_buf[r][i].xfer_size = VECTOR_DIM * sizeof(float);
                 desc_buf[r][i].completion_addr = (uintptr_t)&(comp_buf[r][i]);
                 desc_buf[r][i].delta_addr = (uint64_t)(uintptr_t)dr_buf[r][i];
                 desc_buf[r][i].max_delta_size = VECTOR_DIM * sizeof(float) / 8 * 10;
-
-                // DSA 페이지 fault 방지용 미리 터치
-                volatile char *desc_touch = (char *)&desc_buf[r][i];
-                for (size_t j = 0; j < sizeof(struct dsa_hw_desc); j++) desc_touch[j];
-                volatile char *comp_touch = (char *)&comp_buf[r][i];
-                for (size_t j = 0; j < sizeof(struct dsa_completion_record); j++) comp_touch[j];
-                volatile char *dr_touch = (char *)dr_buf[r][i];
-                for (size_t j = 0; j < VECTOR_DIM * sizeof(float) / 8 * 10; j++) dr_touch[j];
             }
 
-            batch_comp_array[r].status = 0;
+            memset(&batch_desc_array[r], 0, sizeof(struct dsa_hw_desc));
+            memset(&batch_comp_array[r], 0, sizeof(struct dsa_completion_record));
             batch_desc_array[r].opcode = DSA_OPCODE_BATCH;
             batch_desc_array[r].flags = IDXD_OP_FLAG_RCR | IDXD_OP_FLAG_CRAV;
             batch_desc_array[r].desc_count = N_V;
             batch_desc_array[r].desc_list_addr = (uint64_t)&(desc_buf[r][0]);
             batch_desc_array[r].completion_addr = (uintptr_t)&(batch_comp_array[r]);
-
-            // 배치용 completion record 터치
-            volatile char *bc_touch = (char *)&batch_comp_array[r];
-            for (size_t j = 0; j < sizeof(struct dsa_completion_record); j++) bc_touch[j];
         }
 
-        void *wq_portal = map_wq();
+        void *wq_portal = map_wq(0);
+	void *wq_portal2 = map_wq(1);
+
+        struct timespec t_start, t_end, t_1, t_2;
         double total_dsa = 0.0, total_cpu = 0.0;
+
         clock_gettime(CLOCK_MONOTONIC, &t_start);
 
+        clock_gettime(CLOCK_MONOTONIC, &t_1);
         for (int i = 0; i < N_V; i++) {
             desc_buf[0][i].src_addr = (uintptr_t)base[0][i];
             desc_buf[0][i].src2_addr = (uintptr_t)delta[0][i];
         }
-        submit_delta_creation(wq_portal, &batch_desc_array[0]);
+	submit_delta_creation(wq_portal, &batch_desc_array[0]);
+        clock_gettime(CLOCK_MONOTONIC, &t_2);
+        total_dsa += get_elapsed_sec(t_1, t_2);
 
         for (int r = 0; r < num_repeat; r++) {
+            clock_gettime(CLOCK_MONOTONIC, &t_1);
             if (r + 1 < num_repeat) {
                 for (int i = 0; i < N_V; i++) {
                     desc_buf[r+1][i].src_addr = (uintptr_t)base[r+1][i];
                     desc_buf[r+1][i].src2_addr = (uintptr_t)delta[r+1][i];
                 }
                 clock_gettime(CLOCK_MONOTONIC, &t_1);
-                submit_delta_creation(wq_portal, &batch_desc_array[r+1]);
-                clock_gettime(CLOCK_MONOTONIC, &t_2);
-                total_dsa += get_elapsed_sec(t_1, t_2);
+		submit_delta_creation(wq_portal, &batch_desc_array[r+1]);
             }
 
-            clock_gettime(CLOCK_MONOTONIC, &t_1);
-            wait_for_completion(&batch_comp_array[r], &(comp_buf[r][0]));
+	    wait_for_completion(&batch_comp_array[r], comp_buf[r]);
+            clock_gettime(CLOCK_MONOTONIC, &t_2);
+            total_dsa += get_elapsed_sec(t_1, t_2);
+
             compute_diff_indices_from_delta_records(indices[r], count[r], comp_buf[r], dr_buf[r]);
             compute_partial_distances(base[r], delta[r], results_part, indices[r], count[r], x_part_buffers, y_part_buffers);
-            clock_gettime(CLOCK_MONOTONIC, &t_2);
-            total_cpu += get_elapsed_sec(t_1, t_2);
+        }
+
+        clock_gettime(CLOCK_MONOTONIC, &t_end);
+        double elapsed = get_elapsed_sec(t_start, t_end);
+	total_cpu = elapsed - total_dsa;
+        double flops = 2.0 * VECTOR_DIM * N_V * num_repeat;
+        double gflops = flops / elapsed / 1e9;
+
+        printf("[PARTIAL L2 PIPELINED] Total Time: %.6f sec | Throughput: %.2f GFLOPS\n", elapsed, gflops);
+        printf("[PARTIAL L2 PIPELINED] DSA Ratio: %.2f%% | CPU Ratio: %.2f%%\n", 100.0 * total_dsa / elapsed, 100.0 * total_cpu / elapsed);
+    } else {
+        struct timespec t_start, t_end;
+        clock_gettime(CLOCK_MONOTONIC, &t_start);
+
+        for (int r = 0; r < num_repeat; r++) {
+            compute_all_distances(base[r], delta[r], results, diff_buffers);
         }
 
         clock_gettime(CLOCK_MONOTONIC, &t_end);
         double elapsed = get_elapsed_sec(t_start, t_end);
         double flops = 2.0 * VECTOR_DIM * N_V * num_repeat;
         double gflops = flops / elapsed / 1e9;
-        printf("[PARTIAL L2 PIPELINED] Total Time: %.6f sec | Throughput: %.2f GFLOPS\n", elapsed, gflops);
-        printf("[PARTIAL L2 PIPELINED] DSA Ratio: %.2f%% | CPU Ratio: %.2f%%\n",
-               100.0 * total_dsa / elapsed, 100.0 * total_cpu / elapsed);
-    }
 
-    // ... 메모리 해제 생략 ...
+        printf("[FULL L2 MKL] Total Time: %.6f sec | Throughput: %.2f GFLOPS\n", elapsed, gflops);
+    }
 
     return 0;
 }

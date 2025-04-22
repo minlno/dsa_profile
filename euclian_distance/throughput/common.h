@@ -112,7 +112,7 @@ umonitor(void *addr) {
 
 
 
-static void * map_wq(void) {
+static void * map_wq(int nth) {
   void *wq_portal;
   struct accfg_ctx *ctx;
   struct accfg_wq *wq;
@@ -120,6 +120,7 @@ static void * map_wq(void) {
   char path[PATH_MAX];
   int fd;
   int wq_found;
+  int n = nth;
   accfg_new(&ctx);
   accfg_device_foreach(ctx, device) {
     /* Use accfg_device_(*) functions to select enabled device
@@ -134,8 +135,14 @@ static void * map_wq(void) {
       wq_found = accfg_wq_get_type(wq) == ACCFG_WQT_USER &&
       accfg_wq_get_mode(wq) == ACCFG_WQ_DEDICATED;
       //accfg_wq_get_mode(wq) == ACCFG_WQ_SHARED;
-      if (wq_found)
+      if (wq_found) {
+      	if (n > 0) {
+	      n--;
+	      continue;
+        }
+	      printf("%s\n", path);
         break;
+      }
     }
     if (wq_found)
       break;
